@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Africa Unfolds — Platform Setup Tracker</title>
+<style>
+  :root {
+    --obsidian: #0B0F0E;
+    --gold: #D4A843;
+    --teal: #4A7B6F;
+    --parchment: #E8E0D4;
+    --canopy: #1C2B25;
+    --laterite: #C24B2A;
+    --canopy-light: #243832;
+    --gold-dim: rgba(212, 168, 67, 0.15);
+    --teal-dim: rgba(74, 123, 111, 0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--obsidian);
+    color: var(--parchment);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--canopy);
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    padding: 28px 24px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .brand-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+
+  .brand-tagline {
+    font-size: 12px;
+    color: rgba(232,224,212,0.55);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid rgba(194, 75, 42, 0.5);
+    color: #e07055;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .reset-btn:hover {
+    background: rgba(194,75,42,0.12);
+    border-color: var(--laterite);
+    color: #f08070;
+  }
+
+  .overall-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(232,224,212,0.5);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  .overall-progress-label span:last-child { color: var(--gold); font-weight: 700; font-size: 13px; }
+
+  .progress-track {
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── Stats row ── */
+  .stats-row {
+    max-width: 860px;
+    margin: 20px auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    background: var(--canopy);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-value {
+    font-family: Georgia, serif;
+    font-size: clamp(22px, 3.5vw, 30px);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-value.teal { color: var(--teal); }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(232,224,212,0.45);
+    margin-top: 5px;
+  }
+
+  /* ── Sections ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  .section {
+    margin-bottom: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--canopy);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .section-header:hover { background: var(--canopy-light); }
+
+  .section-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: center;
+  }
+
+  .section-title-group { flex: 1; min-width: 0; }
+
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--parchment);
+    line-height: 1.2;
+  }
+
+  .section-meta {
+    font-size: 11px;
+    color: rgba(232,224,212,0.4);
+    margin-top: 2px;
+  }
+
+  .section-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    min-width: 110px;
+  }
+
+  .section-progress-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 99px;
+    overflow: hidden;
+    min-width: 60px;
+  }
+  .section-progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--teal);
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .section-progress-fill.complete { background: var(--gold); }
+
+  .section-pct {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    min-width: 28px;
+    text-align: right;
+  }
+  .section-pct.complete { color: var(--gold); }
+
+  .chevron {
+    color: rgba(232,224,212,0.3);
+    font-size: 12px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+  .section.open .chevron { transform: rotate(180deg); }
+
+  /* ── Task list ── */
+  .task-list {
+    display: none;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .section.open .task-list { display: block; }
+
+  .task-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .task-row:last-child { border-bottom: none; }
+  .task-row:hover { background: rgba(255,255,255,0.03); }
+  .task-row.done { opacity: 0.55; }
+
+  /* Custom checkbox */
+  .cb-wrap {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .cb {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .task-row.done .cb {
+    background: var(--teal);
+    border-color: var(--teal);
+    transform: scale(1.05);
+  }
+
+  .cb-check {
+    opacity: 0;
+    transform: scale(0) rotate(-45deg);
+    transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    color: white;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .task-row.done .cb-check {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .task-content { flex: 1; min-width: 0; }
+
+  .task-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .task-label {
+    font-size: 14px;
+    color: var(--parchment);
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
+    transition: color 0.2s;
+  }
+  .task-row.done .task-label {
+    color: rgba(232,224,212,0.45);
+    text-decoration: line-through;
+    text-decoration-color: rgba(232,224,212,0.25);
+  }
+
+  .badge {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .badge-urgent { background: rgba(194,75,42,0.2); color: #e06040; border: 1px solid rgba(194,75,42,0.35); }
+  .badge-high { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
+  .badge-medium { background: rgba(74,123,111,0.15); color: #6aaf9e; border: 1px solid rgba(74,123,111,0.3); }
+  .badge-low { background: rgba(232,224,212,0.06); color: rgba(232,224,212,0.45); border: 1px solid rgba(232,224,212,0.1); }
+
+  .task-note {
+    font-size: 12px;
+    color: rgba(232,224,212,0.38);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .task-row.done .task-note { color: rgba(232,224,212,0.22); }
+
+  /* ── Confirmation overlay ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .overlay.show { display: flex; }
+
+  .dialog {
+    background: var(--canopy);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 14px;
+    padding: 32px 28px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+  }
+  .dialog-icon { font-size: 32px; margin-bottom: 12px; }
+  .dialog h2 {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    color: var(--parchment);
+    margin-bottom: 10px;
+  }
+  .dialog p {
+    font-size: 13px;
+    color: rgba(232,224,212,0.55);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .dialog-btns { display: flex; gap: 10px; }
+  .btn-cancel, .btn-confirm {
+    flex: 1;
+    padding: 11px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-cancel {
+    background: rgba(255,255,255,0.06);
+    color: var(--parchment);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-cancel:hover { background: rgba(255,255,255,0.1); }
+  .btn-confirm {
+    background: var(--laterite);
+    color: white;
+  }
+  .btn-confirm:hover { background: #d9553a; }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    header { padding: 20px 16px 18px; }
+    .stats-row { padding: 0 16px; gap: 8px; }
+    .stat-card { padding: 12px 10px; }
+    main { padding: 0 16px 50px; }
+    .section-header { padding: 14px 14px; }
+    .task-row { padding: 12px 14px; gap: 12px; }
+    .section-progress-wrap { min-width: 80px; }
+    .section-progress-track { min-width: 40px; }
+    .brand-row { gap: 12px; }
+  }
+
+  @media (max-width: 400px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Ripple on complete */
+  @keyframes ripple {
+    from { transform: scale(0); opacity: 0.5; }
+    to   { transform: scale(3); opacity: 0; }
+  }
+  .cb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background: var(--teal);
+    transform: scale(0);
+    opacity: 0;
+  }
+  .task-row.just-done .cb::after {
+    animation: ripple 0.35s ease-out forwards;
+  }
+
+  /* Completion sparkle on stat */
+  @keyframes pulse-gold {
+    0%,100% { color: var(--gold); }
+    50% { color: #f5c842; text-shadow: 0 0 12px rgba(212,168,67,0.6); }
+  }
+  .stat-value.pulse { animation: pulse-gold 0.5s ease; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand-row">
+      <div>
+        <div class="brand-name">Africa Unfolds</div>
+        <div class="brand-tagline">Platform Setup Tracker &nbsp;·&nbsp; Africa, fully told.</div>
+      </div>
+      <button class="reset-btn" onclick="confirmReset()">Reset all</button>
+    </div>
+    <div class="overall-progress-label">
+      <span>Overall Progress</span>
+      <span id="overall-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="overall-bar" style="width:0%"></div>
+    </div>
+  </div>
+</header>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-value" id="stat-total">—</div>
+    <div class="stat-label">Total Tasks</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value teal" id="stat-done">0</div>
+    <div class="stat-label">Completed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="stat-remaining">—</div>
+    <div class="stat-label">Remaining</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="stat-pct">0%</div>
+    <div class="stat-label">Progress</div>
+  </div>
+</div>
+
+<main id="sections-container"></main>
+
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <div class="dialog-icon">⚠️</div>
+    <h2>Reset all progress?</h2>
+    <p>This will clear every completed task and start the tracker from zero. This cannot be undone.</p>
+    <div class="dialog-btns">
+      <button class="btn-cancel" onclick="closeReset()">Cancel</button>
+      <button class="btn-confirm" onclick="doReset()">Yes, reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    title: "Domain & Infrastructure",
+    icon: "🌐",
+    tasks: [
+      { priority: "urgent", label: "Purchase africaunfolds.com", note: "Namecheap or Google Domains — do this first, today" },
+      { priority: "urgent", label: "Set up professional email hello@africaunfolds.com", note: "Google Workspace $6/mo or Zoho Mail free tier" },
+      { priority: "high",   label: "Point domain to Beehiiv custom domain", note: "DNS CNAME record — 24–48 hrs to propagate" },
+      { priority: "high",   label: "Set up africaunfolds.com website placeholder", note: "Simple Webflow or Carrd landing page with newsletter CTA" },
+      { priority: "medium", label: "Install Google Analytics 4 on website", note: "Track traffic sources from day one" },
+    ]
+  },
+  {
+    title: "Beehiiv Newsletter",
+    icon: "✉️",
+    tasks: [
+      { priority: "urgent", label: "Create Beehiiv account — publication name: Africa Unfolds Weekly", note: "Free tier up to 2,500 subscribers" },
+      { priority: "high",   label: "Connect custom domain newsletter.africaunfolds.com", note: "Makes archive links look professional" },
+      { priority: "high",   label: "Set up brand header — obsidian background, gold wordmark", note: "Upload logo as PNG with transparent background" },
+      { priority: "high",   label: "Configure sender: Africa Unfolds · hello@africaunfolds.com", note: "Sender name appears in inbox — make it the brand" },
+      { priority: "high",   label: "Write and publish welcome email sequence (3 emails)", note: "Email 1: Brand story. Email 2: What to expect. Email 3: Archive" },
+      { priority: "medium", label: "Activate referral program", note: "After first 100 subscribers" },
+      { priority: "medium", label: "Create 6 pillar tags for segmentation", note: "Roots · Terrain · Power · Culture · Rise · Voices" },
+      { priority: "medium", label: "Set up UTM tracking links for all bio links", note: "africaunfolds.com/subscribe?utm_source=instagram" },
+    ]
+  },
+  {
+    title: "YouTube",
+    icon: "▶️",
+    tasks: [
+      { priority: "urgent", label: "Claim handle @AfricaUnfolds on YouTube", note: "youtube.com/handle — claim immediately" },
+      { priority: "high",   label: "Upload channel profile icon — AU monogram gold on obsidian", note: "800×800px minimum PNG" },
+      { priority: "high",   label: "Design and upload channel banner 2560×1440px", note: "Obsidian background, gold wordmark, tagline" },
+      { priority: "high",   label: "Write channel description with all six pillars and newsletter CTA", note: "Include link in first 200 characters" },
+      { priority: "high",   label: "Add all social and newsletter links to channel", note: "YouTube allows up to 14 links" },
+      { priority: "medium", label: "Create 6 playlist stubs — one per pillar", note: "Empty playlists are fine to create now" },
+      { priority: "high",   label: "Produce 60-second brand trailer using ElevenLabs VO", note: "Set as channel trailer for non-subscribers" },
+      { priority: "medium", label: "Create YouTube thumbnail template in Canva", note: "Obsidian bg, Cormorant headline, gold bar, AU logo" },
+      { priority: "low",    label: "Enable monetization application setup", note: "1,000 subs + 4,000 hrs required" },
+    ]
+  },
+  {
+    title: "Instagram",
+    icon: "📸",
+    tasks: [
+      { priority: "urgent", label: "Claim @africaunfolds handle", note: "Convert to Professional account immediately" },
+      { priority: "high",   label: "Upload profile photo — AU monogram circle", note: "Same asset as YouTube for consistency" },
+      { priority: "high",   label: "Write bio: Africa, fully told. History Travel Culture Rise", note: "Line 4: newsletter link with UTM" },
+      { priority: "high",   label: "Create 6 Story Highlight covers — one per pillar", note: "Pillar color as background in Canva" },
+      { priority: "medium", label: "Design Reel cover template 1080×1920px", note: "Consistent covers make grid look intentional" },
+      { priority: "medium", label: "Design carousel template 1080×1080px", note: "Gold accent bar on left, text on obsidian or parchment" },
+      { priority: "high",   label: "Post 3 seed posts before driving traffic", note: "Grid should not be empty on launch" },
+      { priority: "medium", label: "Connect Instagram to Facebook Page", note: "Meta Business Suite for cross-posting" },
+    ]
+  },
+  {
+    title: "LinkedIn",
+    icon: "💼",
+    tasks: [
+      { priority: "high",   label: "Create LinkedIn Company Page: Africa Unfolds", note: "Use hello@africaunfolds.com as admin" },
+      { priority: "high",   label: "Write company tagline: Africa's definitive media platform", note: "128 character limit" },
+      { priority: "high",   label: "Upload logo and cover — light mode version", note: "Cover: parchment background, black wordmark" },
+      { priority: "medium", label: "Write company About section 2000 chars", note: "Lead with the market gap. Include newsletter CTA." },
+      { priority: "medium", label: "Add website URL africaunfolds.com", note: "" },
+      { priority: "medium", label: "Follow 20 target accounts: tourism boards, airlines, fintech brands", note: "Future sponsors — follow before pitching" },
+    ]
+  },
+  {
+    title: "X / Twitter",
+    icon: "𝕏",
+    tasks: [
+      { priority: "urgent", label: "Claim @AfricaUnfolds handle on X", note: "Common brand names get taken fast" },
+      { priority: "high",   label: "Upload profile photo and header image", note: "Header: obsidian bg, gold tagline, six pillar dots" },
+      { priority: "high",   label: "Write bio: Africa, fully told. + newsletter link", note: "End with africaunfolds.com" },
+      { priority: "medium", label: "Pin first tweet — brand mission as a 5-tweet thread", note: "First thing profile visitors see" },
+      { priority: "medium", label: "Follow 50 accounts: journalists historians tourism boards creators", note: "Engagement is reciprocal" },
+    ]
+  },
+  {
+    title: "Facebook",
+    icon: "📘",
+    tasks: [
+      { priority: "high",   label: "Create Facebook Page: Africa Unfolds", note: "Category: Media/News Company" },
+      { priority: "high",   label: "Upload profile photo and cover — same as Instagram", note: "Facebook cover is 820×312px" },
+      { priority: "medium", label: "Write page description and add website URL", note: "Match LinkedIn About text" },
+      { priority: "high",   label: "Set Facebook username @AfricaUnfolds", note: "Makes URL facebook.com/AfricaUnfolds" },
+      { priority: "medium", label: "Connect to Meta Business Suite", note: "Manage Instagram and Facebook from one dashboard" },
+    ]
+  },
+  {
+    title: "TikTok",
+    icon: "🎵",
+    tasks: [
+      { priority: "urgent", label: "Claim @africaunfolds handle on TikTok", note: "TikTok handles get taken fastest" },
+      { priority: "high",   label: "Upload profile photo and write bio", note: "80 char limit: Africa, fully told. + link" },
+      { priority: "high",   label: "Switch to TikTok Business Account", note: "Unlocks analytics and website link in bio" },
+      { priority: "medium", label: "Post 2 seed videos before promoting", note: "Repurpose first 2 Instagram Reels" },
+    ]
+  },
+  {
+    title: "AI Tools & Automation",
+    icon: "🤖",
+    tasks: [
+      { priority: "urgent", label: "Set up Claude Project: Africa Unfolds Brand OS", note: "Upload brand voice, pillars, colors, audience profiles" },
+      { priority: "urgent", label: "Subscribe to Perplexity Pro $20/mo", note: "Primary research engine" },
+      { priority: "high",   label: "Set up Google NotebookLM workspace", note: "Free — upload all strategy docs and research" },
+      { priority: "high",   label: "Subscribe to ElevenLabs Starter $5/mo", note: "Create brand voice AI narrator" },
+      { priority: "high",   label: "Set up Buffer and connect all platforms", note: "Essentials $6/mo for all platforms" },
+      { priority: "high",   label: "Subscribe to Midjourney or Ideogram $10/mo", note: "Cinematic imagery for all content" },
+      { priority: "medium", label: "Set up N8N account", note: "Build Story Bank inbox workflow first" },
+      { priority: "medium", label: "Create Airtable base: Africa Unfolds Content OS", note: "Tables: Story Bank, Nugget Factory, Calendar, Sponsors" },
+      { priority: "medium", label: "Set up CapCut or Veed.io", note: "CapCut free handles auto-captions" },
+      { priority: "low",    label: "Set up Gumroad account for digital products", note: "Zero monthly fee, create before you need it" },
+    ]
+  }
+];
+
+const STORAGE_KEY = 'au_tracker_v1';
+
+// State: flat array of booleans indexed by global task index
+let state = [];
+let totalTasks = 0;
+
+function buildId(si, ti) { return `${si}-${ti}`; }
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (Array.isArray(saved) && saved.length === totalTasks) {
+      state = saved;
+    } else {
+      state = new Array(totalTasks).fill(false);
+    }
+  } catch(e) {
+    state = new Array(totalTasks).fill(false);
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function getGlobalIndex(si, ti) {
+  let idx = 0;
+  for (let i = 0; i < si; i++) idx += SECTIONS[i].tasks.length;
+  return idx + ti;
+}
+
+function badgeClass(p) {
+  return { urgent: 'badge-urgent', high: 'badge-high', medium: 'badge-medium', low: 'badge-low' }[p];
+}
+function badgeLabel(p) {
+  return { urgent: 'Urgent', high: 'High', medium: 'Medium', low: 'Low' }[p];
+}
+
+function buildDOM() {
+  const container = document.getElementById('sections-container');
+  container.innerHTML = '';
+
+  SECTIONS.forEach((sec, si) => {
+    const section = document.createElement('div');
+    section.className = 'section open';
+    section.id = `section-${si}`;
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.setAttribute('role', 'button');
+    header.setAttribute('aria-expanded', 'true');
+    header.onclick = () => toggleSection(si);
+
+    const pct = getSectionPct(si);
+    const isComplete = pct === 100;
+
+    header.innerHTML = `
+      <div class="section-icon">${sec.icon}</div>
+      <div class="section-title-group">
+        <div class="section-title">§${si} — ${sec.title}</div>
+        <div class="section-meta">${sec.tasks.length} tasks</div>
+      </div>
+      <div class="section-progress-wrap">
+        <div class="section-progress-track">
+          <div class="section-progress-fill${isComplete?' complete':''}" id="spf-${si}" style="width:${pct}%"></div>
+        </div>
+        <div class="section-pct${isComplete?' complete':''}" id="spct-${si}">${pct}%</div>
+      </div>
+      <span class="chevron">▼</span>
+    `;
+
+    // Task list
+    const taskList = document.createElement('div');
+    taskList.className = 'task-list';
+    taskList.id = `tasklist-${si}`;
+
+    sec.tasks.forEach((task, ti) => {
+      const gi = getGlobalIndex(si, ti);
+      const done = state[gi];
+
+      const row = document.createElement('div');
+      row.className = `task-row${done ? ' done' : ''}`;
+      row.id = `task-${si}-${ti}`;
+      row.onclick = () => toggleTask(si, ti);
+
+      row.innerHTML = `
+        <div class="cb-wrap">
+          <div class="cb">
+            <span class="cb-check">✓</span>
+          </div>
+        </div>
+        <div class="task-content">
+          <div class="task-top">
+            <div class="task-label">${escHtml(task.label)}</div>
+            <span class="badge ${badgeClass(task.priority)}">${badgeLabel(task.priority)}</span>
+          </div>
+          ${task.note ? `<div class="task-note">${escHtml(task.note)}</div>` : ''}
+        </div>
+      `;
+
+      taskList.appendChild(row);
+    });
+
+    section.appendChild(header);
+    section.appendChild(taskList);
+    container.appendChild(section);
+  });
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toggleSection(si) {
+  const section = document.getElementById(`section-${si}`);
+  const header = section.querySelector('.section-header');
+  const isOpen = section.classList.contains('open');
+  section.classList.toggle('open', !isOpen);
+  header.setAttribute('aria-expanded', String(!isOpen));
+}
+
+function toggleTask(si, ti) {
+  const gi = getGlobalIndex(si, ti);
+  const wasDone = state[gi];
+  state[gi] = !wasDone;
+  saveState();
+
+  const row = document.getElementById(`task-${si}-${ti}`);
+  if (!wasDone) {
+    row.classList.add('just-done');
+    row.classList.add('done');
+    setTimeout(() => row.classList.remove('just-done'), 400);
+  } else {
+    row.classList.remove('done');
+  }
+
+  updateSectionProgress(si);
+  updateOverall();
+}
+
+function getSectionPct(si) {
+  const tasks = SECTIONS[si].tasks;
+  let done = 0;
+  tasks.forEach((_, ti) => { if (state[getGlobalIndex(si, ti)]) done++; });
+  return tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+}
+
+function updateSectionProgress(si) {
+  const pct = getSectionPct(si);
+  const fill = document.getElementById(`spf-${si}`);
+  const pctEl = document.getElementById(`spct-${si}`);
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.classList.toggle('complete', pct === 100);
+  }
+  if (pctEl) {
+    pctEl.textContent = pct + '%';
+    pctEl.classList.toggle('complete', pct === 100);
+  }
+}
+
+function updateOverall() {
+  const done = state.filter(Boolean).length;
+  const total = totalTasks;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('overall-bar').style.width = pct + '%';
+  document.getElementById('overall-pct').textContent = pct + '%';
+
+  const doneEl = document.getElementById('stat-done');
+  const prev = parseInt(doneEl.textContent) || 0;
+  doneEl.textContent = done;
+  if (done !== prev) {
+    doneEl.classList.remove('pulse');
+    void doneEl.offsetWidth;
+    doneEl.classList.add('pulse');
+    setTimeout(() => doneEl.classList.remove('pulse'), 500);
+  }
+
+  document.getElementById('stat-remaining').textContent = total - done;
+  document.getElementById('stat-pct').textContent = pct + '%';
+}
+
+function confirmReset() {
+  document.getElementById('overlay').classList.add('show');
+}
+function closeReset() {
+  document.getElementById('overlay').classList.remove('show');
+}
+function doReset() {
+  state = new Array(totalTasks).fill(false);
+  saveState();
+  closeReset();
+  buildDOM();
+  updateOverall();
+  SECTIONS.forEach((_, si) => updateSectionProgress(si));
+}
+
+// Close overlay on background click
+document.getElementById('overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeReset();
+});
+
+// Init
+(function init() {
+  SECTIONS.forEach(s => { totalTasks += s.tasks.length; });
+  document.getElementById('stat-total').textContent = totalTasks;
+  document.getElementById('stat-remaining').textContent = totalTasks;
+  loadState();
+  buildDOM();
+  updateOverall();
+})();
+</script>
+</body>
+</html>
